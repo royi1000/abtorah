@@ -43,7 +43,7 @@ def get_index():
     return index
 
 def toc_to_xml(xml_file_name='toc.xml',write_text_jsons=True):
-    toc = sefsum.get_toc()
+    toc = sefsum.library.get_toc()
     xml=open(xml_file_name, 'w+')
     level = 1
     xml.write('<?xml version="1.0" ?>\n<index name="onyourway">\n')
@@ -66,7 +66,12 @@ def handle_complex(child, xml, level, comment=False, write_text_jsons=False):
         books_index[ind] = child.full_title()
         reverse_index[child.full_title()] = ind
         if comment:
-            commentary[reverse_index[child.full_title().split(' on ')[-1]]].append([ind, get_commentary_description(s_index.commentator, s_index.heCommentator)])
+            print child.primary_title()
+            try:
+                commentary[reverse_index[child.primary_title()]].append([ind, get_commentary_description(s_index.title, s_index.get_title('he'))])
+            except:
+                import pdb;pdb.set_trace()
+
         he = child.title_group.primary_title('he').encode('utf-8').replace('"', "''")
         hebrew_index[ind] = he
         he_cont = TextChunk(Ref(child.full_title()), 'he').text
@@ -92,14 +97,15 @@ def handle_node(node,xml,level, write_text_jsons=False):
         if s_index.is_complex():
             xml.write('{}<node n="{}" en="{}">\n'.format(' '*4*level,Ref(node[u'title']).he_normal().encode('utf-8').replace('"', "''"), node[u'title']))
             for child in s_index.nodes.children:
-                handle_complex(child, xml, level+1, s_index.is_commentary(),write_text_jsons=write_text_jsons)
+                handle_complex(child, xml, level+1, Ref(node[u'title']).is_commentary(),write_text_jsons=write_text_jsons)
             xml.write(' '*4*level + '</node>\n')
             return
         ind = get_index()
         books_index[ind] = node[u'title']
         reverse_index[node[u'title']] = ind
-        if s_index.is_commentary():
-            commentary[reverse_index[s_index.commentaryBook]].append([ind, get_commentary_description(s_index.commentator, s_index.heCommentator)])
+        if Ref(node[u'title']).is_commentary():
+            for orig in s_index.base_text_titles:
+                commentary[reverse_index[orig]].append([ind, get_commentary_description(s_index.title, s_index.get_title('he'))])
         he = node[u'heTitle'].encode('utf-8').replace('"', "''")
         hebrew_index[ind] = he
         he_cont = TextChunk(Ref(node[u'title']), 'he').text
