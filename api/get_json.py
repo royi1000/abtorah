@@ -62,11 +62,12 @@ class TOC(object):
             else:  # real book
                 title, he_title = item["title"], item["heTitle"]
                 if not item["dependence"]:
-                    book = self.get_book(item["title"], all=True)
+                    book = self.get_book(item["firstSection"], chapter=None)
                     if book["isComplex"]:
-                        self.handle_complex_book(book)
+                        self.handle_complex_book(book, level)
                     else:
-                        self.handle_simple_book(book)
+                        book = self.get_book(item["title"], all=True)
+                        self.handle_simple_book(book, level)
                 else:
                     if title in native_comment:
                         for b in book["base_text_titles"]:
@@ -77,11 +78,30 @@ class TOC(object):
                                      format(title, item["firstSection"], item["base_text_mapping"]))
                 self.counter += 1
 
-    def handle_complex_book(self, book):
-        length = 1
-        while book["next"]
+    def handle_complex_book(self, book, level):
+        length = 0
+        book_json = dict(he=[], en=[], chapter_he=[], chapter_en=[])
+        title = book["indexTitle"]
+        he_title = book["heIndexTitle"]
+        while book:
+            length += 1
+            book_json['chapter_en'].append(book['book'])
+            book_json['chapter_he'].append(book['heTitle'])
+            book_json['he'].append(book['he'])
+            book_json['en'].append(book['en'])
+            if not book['next']:
+                book = None
+            else:
+                book = self.get_book(book["next"], chapter=None)
+        book_json['length'] = length
+        self.toc_file.write('{}<node n="{}" en="{}" i="{}" c="{}" t="2">\n'.
+                        format(' ' * 4 * level,
+                               he_title.encode('utf-8').replace('"', "''"),
+                               title, self.counter, length))
+        self.map[book['text']: self.counter]
+        self.write_book(book_json, self.counter)
 
-    def handle_simple_book(self, book):
+    def handle_simple_book(self, book, level):
         book_json = {}
         l = 0
         if 'lengths' in book:
@@ -89,6 +109,8 @@ class TOC(object):
 
         book_json['en'] = book['text']
         book_json['he'] = book['he']
+        title = book['book']
+        he_title = book['heTitle']
         length = max(len(book['text']), len(book['he']))
         if l > length:
             raise IndexError("book {} length error len: {} en: {} he: {}".format(title, l,
@@ -100,15 +122,15 @@ class TOC(object):
                                                                                    len(book['he'])))
         length = max(l, length)
         book_json['length'] = length
-        self.toc_file.write('{}<node n="{}" en="{}" i="{}" c="{}" m="1">\n'.
+        self.toc_file.write('{}<node n="{}" en="{}" i="{}" c="{}" t="1">\n'.
                             format(' ' * 4 * level,
                                    he_title.encode('utf-8').replace('"', "''"),
                                    title, self.counter, length))
         self.map[book['text']: self.counter]
         self.write_book(book_json, self.counter)
 
-    def write_book(self, data, id):
-        open('{}/{}.json'.format(self.json_dir, id), 'w+').write(json.dumps(data, indent=1))
+    def write_book(self, data, _id):
+        open('{}/{}.json'.format(self.json_dir, _id), 'w+').write(json.dumps(data, indent=1))
 
     def get_book(self, book, chapter=(1, ), all=False, commentary=False, text=True):
         attrs = []
