@@ -3,11 +3,12 @@ import logging
 import json
 import requests
 import argparse
+import autodebug
 from collections import defaultdict
 from colorlog import ColoredFormatter
 
 logging.basicConfig()
-logger = logging.Logger(__name__, logging.INFO)
+logger = logging.Logger(__name__, logging.DEBUG)
 
 not_native_comment = []
 native_comment = []
@@ -25,7 +26,16 @@ def sef_logger():
     logger.info("Logger Initialized")
 
 DEFAULT_HOST = "http://www.sefaria.org"
+tanach_list = ["Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Joshua", "Judges", "I Samuel", "II Samuel",
+               "I Kings", "II Kings", "Jeremiah", "Ezekiel", "Hosea", "Joel", "Amos", "Obadiah", "Jonah", "Micah",
+               "Nahum", "Habakkuk", "Zephaniah", "Haggai", "Zechariah", "Malachi", "Psalms", "Proverbs", "Job",
+               "Song of Songs", "Ruth", "Lamentations", "Ecclesiastes", "Esther", "Daniel", "Ezra", "Nehemiah",
+               "I Chronicles", "II Chronicles",
+                ]
+torah_list = ["Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy"]
 
+torah_pair = [("Genesis", "Bereshit"), ("Exodus", "Shemot"), ("Leviticus", "Vayikra"),
+              ("Numbers", "Bamidbar"),  ("Deuteronomy", "Devarim")]
 
 class TOC(object):
     TOC_PATH = "/api/index/"
@@ -94,6 +104,9 @@ class TOC(object):
         self.comment_map = defaultdict(list)
         self.counter = 1
         self.json_dir = '/tmp/json'
+        # for fast debug
+        self.skip = True
+        self.skip_title = "Biur Halacha"
 
     def check(self, items):
         for item in items:
@@ -140,9 +153,28 @@ class TOC(object):
                 self.toc_file.write('{}</node>\n'.format(' ' * 4 * level))
             else:  # real book
                 title, he_title = item["title"], item["heTitle"]
-                if not item["dependence"]:  # not commentary
+                if self.skip and title != self.skip_title:
                     continue
+                self.skip = False
+
+                if title in ["Yad Ramah on Bava Batra", "Yalkut Shimoni on Nach", "Last Thesis on Hilchos Talmud Torah"]:
+                    logger.warning("skipped: {}".format(title))
+                    continue
+
+                if "Rambam Introduction to" in title or "Tosafot Yom Tov Introduction to the Mishnah" == title or\
+                    "Ba'er Hetev on Shulchan Arukh" in title:
+                    item["dependence"] = False
+                if title in ["Beit Shmuel", "Minchat Chinukh"]:
+                    item["isComplex"] = False
+                if not item["dependence"]:  # not commentary
                     book = self.get_book(item["firstSection"], chapter=None)
+                    # if title in ["Beit Shmuel", "Minchat Chinukh", "Sefer Mitzvot Gadol, Volume One", "Bach",
+                    #              "Beit Yosef"]:
+                    #     book["isComplex"] = False
+                    #     if title == "Bach":
+                    #         title = "Bach, Orach Chaim"
+                    #     if title == "Beit Yosef":
+                    #         title = "Beit Yosef, Orach Chaim"
                     if book["isComplex"]:
                         self.handle_complex_book(book, level)
                     else:
@@ -150,13 +182,21 @@ class TOC(object):
                         self.handle_simple_book(book, level)
                 else:
                     book = self.get_book(item["firstSection"], chapter=None)
+                    if title in ["JPS 1985 Footnotes"]:
+                        item["base_text_titles"] = tanach_list
+                        item["base_text_mapping"] = "not_direct"
+                    if title in ["Tur HaAroch"]:
+                        item["base_text_titles"] = torah_list
                     if item["base_text_titles"]:
-                        base_text_titles = item["base_text_titles"]
+                        base_text_titles = [s.replace('_', ' ') for s in item["base_text_titles"]]
                         if title in ['Targum of I Chronicles', 'Targum of II Chronicles']:
                             base_text_titles = [title.split('of')[1][1:]]
 
                         if title in ['Akeidat Yitzchak', 'Penei David', 'JPS',
-                                     'Penei David']:  # not direct commentary
+                                     'Meshech Hochma', 'Shney Luchot HaBrit']\
+                                or item["collectiveTitle"] in ["Boaz", "Divrey Chamudot", "Maadaney Yom Tov",
+                                                               "Rosh", "Pilpula Charifta", "Korban Netanel",
+                                                               "Tiferet Shmuel", "Yad Ramah", "Haggahot Ya'avetz"]:  # not direct commentary
                             if book["isComplex"]:
                                 self.handle_complex_book(book, level)
                             else:
@@ -174,25 +214,58 @@ class TOC(object):
                                                                                    title))
                         first_section = item['firstSection']
                         if first_section.endswith('Introduction'):
+                            logger.info("Introduction, next: {}".format(book['next']))
                             self.handle_simple_book(book, level+1)
                             first_section = book['next']
 
-                        if not item.get('base_text_mapping') and item['firstSection'].endswith('1:1'):
-                            item["base_text_mapping"] = "many_to_one"
-                        assert (item["base_text_mapping"])
+                        if 'Rabbeinu Bahya' in first_section:
+                            prefix = "Rabbeinu Bahya, "
+                            for s, i in torah_pair:
+                                title = "{}{}".format(prefix, i)
+                                book = self.get_book(title, all=True)
+                                self.handle_simple_book(book, level + 1)
+                                self.comment_map[s].append((title, "one_to_one"))
+                            continue
+
+                        if not item.get('base_text_mapping'):
+                            if first_section[-4] == ':':
+                                item["base_text_mapping"] = "many_to_one"
+                            elif first_section[-2].isdigit() and first_section[-1] in ['a', 'b']:
+                                item["base_text_mapping"] = "one_to_one"
+                            elif first_section[-2] == ':':
+                                item["base_text_mapping"] = "one_to_one"
+                            elif item["collectiveTitle"] in ["Harchev Davar", ]:
+                                item["base_text_mapping"] = "one_to_one"
+                            elif title in ["Iben Ezra on Lamentations"]:
+                                item["base_text_mapping"] = "many_to_one"
+                        if not item["base_text_mapping"]:
+                            import pdb; pdb.set_trace()
+                        if "Tosafot Rid on " in first_section and "Recension" in first_section:
+                            name = first_section[:-3]
+                            book = self.get_book(name, all=True)
+                            self.handle_simple_book(book, level + 1)
+                            continue
+
                         if base_text_titles[0] in first_section:
-                            start = first_section.split(base_text_titles[0])[0]
+                            start = first_section.rsplit(base_text_titles[0], 1)[0]
                             for base in base_text_titles:
                                 self.comment_map[base].append((title, item['base_text_mapping']))
                                 book = self.get_book("{}{}".format(start, base), all=True)
                                 self.handle_simple_book(book, level+1)
+                        elif item["collectiveTitle"] in ["Gur Aryeh", "Biur Halacha"]:
+                            book = self.get_book(title, all=True)
+                            self.handle_simple_book(book, level)
+                            self.comment_map[base_text_titles[0]].append((title, "one_to_one"))
+                        elif item["title"] in ["Magen Avot"]:
+                            book = self.get_book(title, all=True)
+                            self.handle_simple_book(book, level)
+                            self.comment_map[base_text_titles[0]].append((title, "one_to_one"))
                         else:
-                            raise item
+                            import pdb; pdb.set_trace()
 
                         if len(base_text_titles) > 1 and title != item['collectiveTitle']:
                             self.toc_file.write('{}</node>\n'.format(' ' * 4 * level))
 
-                    #import pdb; pdb.set_trace()
                     else:
                         logger.error("unknown commentary type: {} firstSection: {} base_text_mapping".
                                      format(title, item["firstSection"], item["base_text_mapping"]))
@@ -204,21 +277,38 @@ class TOC(object):
         title = book["indexTitle"]
         he_title = book["heIndexTitle"]
         while book:
+            if book["sectionRef"][-1].isdigit():
+                number = True
+                book = self.get_book(book["book"], chapter=None, all=True)
+            else:
+                number = False
             length += 1
             book_json['chapter_en'].append(book['book'])
             book_json['chapter_he'].append(book['heTitle'])
             book_json['he'].append(book['he'])
             book_json['en'].append(book.get('en', []))
-            if not book['next']:
-                book = None
+            if number:
+                book = self.get_book(book["prev"], chapter=None)
+                if book["next"]:
+                    book = self.get_book(book["next"], chapter=None)
+                    book = self.get_book(book["book"], chapter=None, all=True)
+                else:
+                    book = None
             else:
-                book = self.get_book(book["next"], chapter=None)
+                if not book['next']:
+                    book = None
+                else:
+                    # TODO: wait for fix skip balak
+                    if "Meshech Hochma, Balak " in book["next"]:
+                        book["next"] = "Meshech Hochma, Pinekhas"
+                    book = self.get_book(book["next"], chapter=None)
         book_json['length'] = length
         self.toc_file.write('{}<node n="{}" en="{}" i="{}" c="{}" t="2">\n'.
                         format(' ' * 4 * level,
                                he_title.encode('utf-8').replace('"', "''"),
                                title, self.counter, length))
-        self.map[book['text']] = self.counter
+        logger.debug(title)
+        self.map[title] = self.counter
         self.write_book(book_json, self.counter)
         self.counter += 1
 
@@ -274,7 +364,7 @@ class TOC(object):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--check", help="check validity of direct commenters",
+    parser.add_argument("--check", help="check validity of direct commenter's",
                         action="store_true", dest="check")
     args = parser.parse_args()
     sef_logger()
