@@ -49,6 +49,18 @@ one_on_one_titles = ["Binyan Yehoshua on Avot D'Rabbi Natan", 'Commentary of Chi
                     'Rasag on Sefer Yetzirah'
                     ]
 
+known_sections = {
+    (u'Chapter', u'Verse'): [[u'Chapter', u'Verse'], ["פרק", "פסוק"]],
+    (u'Perek', u'Passuk'): [[u'Chapter', u'Verse'], ["פרק", "פסוק"]],
+    (u'Chapter', u'Verse', u'Comment'): [[u'Chapter', u'Verse', u'Comment'], ["פרק", "פסוק", "פירוש"]],
+    (u'Chapter', u'Verse', u'Paragraph'): [[u'Chapter', u'Verse', u'Paragraph'], ["פרק", "פסוק", "פסקה"]],
+    (u'Chapter', u'Section'): [[u'Chapter', u'Section'], ["פרק", "חלק"]],
+    (u'Gate', u'Paragraph'): [[u'Gate', u'Paragraph'], ["שער", "פסקה"]],
+    (u'Chapter', u'Mishna'): [[u'Chapter', u'Mishna'], ["פרק", "משנה"]],
+    }
+
+flat_sections = ["Chapter", "Gate"]
+
 
 def sef_logger():
     color_formatter = ColoredFormatter("%(log_color)s %(asctime)s - %(name)s - %(levelname)s - %(message)s%(reset)s")
@@ -114,15 +126,47 @@ class TOC(object):
                 elif not os.path.isfile(src_dir + en_file):
                     #logger.debug("missing en, path: {}".format(src_dir))
                     lang_type = 'he'
+                length = 0
+                langs = dict()
+                he, en = None, None
+                he_text, en_text = [], []
+                schema = json.load(open("{}/schemas/{}.json".format(self.export_path, title.replace(' ', '_'))))
+                is_complex = False
                 if os.path.isfile(src_dir + he_file):
-                    shutil.copy(src_dir + he_file, "{}/{}.he.json".format(self.json_dir, self.counter))
+                    he = json.load(open(src_dir + he_file))
+                    langs['he'] = (he, he["text"])
+                    if "schema" in he:
+                        is_complex = True
+                    #shutil.copy(src_dir + he_file, "{}/{}.he.json".format(self.json_dir, self.counter))
                 if os.path.isfile(src_dir + en_file):
-                    shutil.copy(src_dir + en_file, "{}/{}.en.json".format(self.json_dir, self.counter))
-                self.toc_file.write('{}<node n="{}" en="{}" i="{}" lang="{}"/>\n'.format(' ' * 4 * level, he_title.
-                                                                                  encode('utf-8').replace('"', "''"),
-                                                                                         title,
-                                                                                         self.counter,
-                                                                                         lang_type))
+                    en = json.load(open(src_dir + en_file))
+                    langs['en'] = (en, en["text"])
+                    if "schema" in en:
+                        is_complex = True
+                    #shutil.copy(src_dir + en_file, "{}/{}.en.json".format(self.json_dir, self.counter))
+                if not is_complex:
+                    sections = schema["schema"]["sectionNames"]
+                    if tuple(sections) not in known_sections:
+                        print '[',
+                        for k in schema["schema"]["heSectionNames"]:
+                            print unicode('"'+k+'",').encode('utf-8'),
+                        print ']'
+
+                        raise KeyError('title:{} unknown section: {} '.format(title, sections))
+                    if sections[0] in flat_sections:
+                        for lang in langs:
+                            for chap, data in enumerate(langs[lang][1]):
+                                length = max(length, chap+1)
+                                json.dump(data, open("{}/{}.{}.{}.json".format(self.json_dir, self.counter,
+                                                                               chap, lang), 'w+'))
+
+                self.toc_file.write('{}<node n="{}" en="{}" i="{}" chaps="{}" lang="{}"/>\n'.
+                                    format(' ' * 4 * level, he_title.
+                                    encode('utf-8').replace('"', "''"),
+                                    title,
+                                    self.counter,
+                                    length,
+                                    lang_type))
                 self.toc_data['hebrew_index'][self.counter] = he_title.encode('utf-8').replace('"', "''")
                 self.toc_data['books_index'][self.counter] = title
                 self.toc_data['reverse_index'][title] = self.counter
