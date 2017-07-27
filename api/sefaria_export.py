@@ -21,15 +21,18 @@ tanach_list = ["Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy", "Josh
                "I Chronicles", "II Chronicles",
                 ]
 torah_list = ["Genesis", "Exodus", "Leviticus", "Numbers", "Deuteronomy"]
-# noe to one dict +key comment
-complex_commentary = ["Abarbanel on Torah", "Tur HaAroch", "Avi Ezer", "Bekhor Shor", "Chizkuni",
+# one to one dict +key comment
+complex_commentary = ["Alshich on Torah", "Abarbanel on Torah", "Tur HaAroch", "Avi Ezer", "Bekhor Shor", "Chizkuni",
                       "Minchat Shai on Torah", "Rabbeinu Bahya", "Siftei Hakhamim", "Marganita Tava al Sefer Hamitzvot",
                       "Megilat Esther al Sefer Hamitzvot", "Kinaat Sofrim al Sefer Hamitzvot", "Raavad on Sefer Yetzirah",
-                      "Marpeh la'Nefesh", "Pat Lechem", "Tov haLevanon"]
+                      "Marpeh la'Nefesh", "Pat Lechem", "Tov haLevanon", "Mizrachi",
+                      ]
+
 
 not_direct_commentary = ["Akeidat Yitzchak", "Meshech Hochma", "Penei David", "Shney Luchot HaBrit",
                          "Rambam Introduction to Masechet Horayot", "Divrey Chamudot",
-                         "Commentary on Sefer Hamitzvot of Rasag"]
+                         "Commentary on Sefer Hamitzvot of Rasag", "Darchei HaTalmud", 'Mordechai on Bava Batra',
+                         'Brit Moshe']
 
 collective_not_direct_commentary = ["Rif", "Yachin", "Boaz", "Divrey Chamudot", "Maadaney Yom Tov",
                                     "Pilpula Charifta", 'Rosh', "Korban Netanel", "Tiferet Shmuel", "Yad Ramah"]
@@ -38,16 +41,32 @@ perek_commentarry_title = ['Chiddushei Ramban', "Shita Mekubetzet on Ketubot", "
                            "Shita Mekubetzet on Nazir", "Shita Mekubetzet on Sotah", "Shita Mekubetzet on Bava Kamma",
                            "Shita Mekubetzet on Bava Metzia", "Shita Mekubetzet on Bava Batra", ]
 perek_commentarry_collective = ["Rashba", "Chidushei Agadot", "Chidushei Halachot", "Chokhmat Shlomo", "Maharam",
-                                "Maharam Shif", 'Ritva', "Tosafot Rid"]
+                                "Maharam Shif", 'Ritva', "Tosafot Rid", "Melechet Shlomo", "Zeroa Yamin"]
 
 one_on_one_titles = ["Binyan Yehoshua on Avot D'Rabbi Natan", 'Commentary of Chida on Tractate Gerim',
-                    "Haggahot Ya'avetz on Avot D'Rabbi Natan", "Haggahot Ya'avetz on Tractate Derekh Eretz Rabbah",
-                    'Nahalat Yaakov on Tractate Gerim', 'Nahalat Yaakov on Tractate Kallah',
-                    'Nahalat Yaakov on Tractate Derekh Eretz Rabbah', 'New Nuschah on Tractate Gerim',
-                    "Rishon Letzion on Avot D'Rabbi Natan", "Tumat Yesharim on Avot D'Rabbi Natan",
-                    'HaGra on Sefer Yetzirah Gra Version', "Pri Yitzhak on Sefer Yetzirah Gra Version",
-                    'Rasag on Sefer Yetzirah'
+                     "Haggahot Ya'avetz on Avot D'Rabbi Natan", "Haggahot Ya'avetz on Tractate Derekh Eretz Rabbah",
+                     'Nahalat Yaakov on Tractate Gerim', 'Nahalat Yaakov on Tractate Kallah',
+                     'Nahalat Yaakov on Tractate Derekh Eretz Rabbah', 'New Nuschah on Tractate Gerim',
+                     "Rishon Letzion on Avot D'Rabbi Natan", "Tumat Yesharim on Avot D'Rabbi Natan",
+                     'HaGra on Sefer Yetzirah Gra Version', "Pri Yitzhak on Sefer Yetzirah Gra Version",
+                     'Rasag on Sefer Yetzirah', "Ketzot HaChoshen on Shulchan Arukh, Choshen Mishpat",
+                     "Me'irat Einayim on Shulchan Arukh, Choshen Mishpat", "Be'er HaGolah",
                     ]
+
+# 3
+complex_commentary_empty_string = ["Ibn Ezra on Lamentations", "Ralbag on Song of Songs", "Ralbag Ruth",
+                                   "Ralbag Esther", "Magen Avot", "Haggahot Ya'avetz on Tractate Derekh Eretz Zuta",
+                                   'Nahalat Yaakov on Tractate Derekh Eretz Zuta', "Ibn Ezra on Isaiah",
+                                   "Netivot HaMishpat, Beurim on Shulchan Arukh, Choshen Mishpat",
+                                   "Beur HaGra on Shulchan Arukh, Choshen Mishpat",
+                                   "Netivot HaMishpat, Hidushim on Shulchan Arukh, Choshen Mishpat",
+                                   "Pithei Teshuva on Shulchan Arukh, Choshen Mishpat", "Siftei Kohen on Shulchan Arukh, Choshen Mishpat"]
+
+add_base_title_from_on = ["Shita Mekubetzet on Berakhot", 'Shita Mekubetzet on Beitzah',
+                          "Be'er HaGolah on Shulchan Arukh, Choshen Mishpat", "Ketzot HaChoshen on Shulchan Arukh, Choshen Mishpat",
+                          "Me'irat Einayim on Shulchan Arukh, Choshen Mishpat", "Netivot HaMishpat, Beurim on Shulchan Arukh, Choshen Mishpat",
+                          "Netivot HaMishpat, Hidushim on Shulchan Arukh, Choshen Mishpat", "Pithei Teshuva on Shulchan Arukh, Choshen Mishpat",
+                          "Siftei Kohen on Shulchan Arukh, Choshen Mishpat"]
 
 known_sections = {
     (u'Chapter', u'Verse'): [[u'Chapter', u'Verse'], ["פרק", "פסוק"]],
@@ -57,9 +76,107 @@ known_sections = {
     (u'Chapter', u'Section'): [[u'Chapter', u'Section'], ["פרק", "חלק"]],
     (u'Gate', u'Paragraph'): [[u'Gate', u'Paragraph'], ["שער", "פסקה"]],
     (u'Chapter', u'Mishna'): [[u'Chapter', u'Mishna'], ["פרק", "משנה"]],
-    }
+    (u'Chapter', u'Mishna', u'Comment'): [[u'Chapter', u'Mishna', u'Comment'], ["פרק", "משנה", "פירוש"]],
+    (u'Chapter', u'Mishnah', u'Comment'): [[u'Chapter', u'Mishna', u'Comment'], ["פרק", "משנה", "פירוש"]],
+    (u'Perek', u'Mishna', u'Comment'): [[u'Chapter', u'Mishna', u'Comment'], ["פרק", "משנה", "פירוש"]],
+    (u'Perek', u'Mishnah', u'Comment'): [[u'Chapter', u'Mishna', u'Comment'], ["פרק", "משנה", "פירוש"]],
+    (u'Paragraph', ): [[u'Paragraph'], ["פסקה"]],
+    (u'Section', u'Paragraph'): [[u'Gate', u'Paragraph'], ["חלק", "פסקה"]],
+    (u'Chapter', u'comment'): [[u'Chapter', u'comment'], ["פרק", "פירוש"]],
+    (u'Perek', u'Mishnah', u'Paragraph'): [[u'Chapter', u'Mishnah', u'Paragraph'], ["פרק", "משנה", "פסקה"]],
+    (u'Chapter', u'Seif', u'Comment'): [[u'Chapter', u'Paragraph', u'Comment'], ["פרק", "סעיף", "פירוש"]],
+    (u'Daf', u'Line'): [[u'Page', u'Line'], ["דף", "שורה"]],
+    (u'Siman', u'Paragraph'): [[u'Siman', u'Paragraph'], ["סימן", "פסקה"]],
+    (u'Daf', u'Peirush'): [[u'Page', u'Comment'], ["דף", "פירוש"]],
+    (u'Daf', u'Comment'): [[u'Page', u'Comment'], ["דף", "פירוש"]],
+    (u'Daf', u'Paragraph'): [[u'Page', u'Paragraph'], ["דף", "פסקה"]],
+    (u'Siman',): [[u'Siman'], ["סימן"]],
+    (u'Seif', u'siman'): [[u'Siman', u'Seif', ], ["סימן", "סעיף"]],
+    (u'Daf', u'Line', u'Comment'): [[u'Page', u'Line', u'Comment'], ["דף", "שורה", "פירוש"]],
+    (u'Perek', u'Halacha', u'Siman'): [[u'Chapter', u'Halacha', u'Siman'], ["פרק", "הלכה", "סימן"]],
+    (u'Halacha', u'Siman'): [[u'Halacha', u'Siman'], ["הלכה", "סימן"]],
+    (u'Daf', u'Halakhah'): [[u'Page', u'Halakhah'], ["דף", "הלכה"]],
+    (u'Chapter', u'Paragraph'): [[u'Chapter', u'Paragraph'], ["פרק", "פסקה"]],
+    (u'Parasha', u'Perek', u'Midrash'): [[u'Chapter', u'Verse', u'Midrash'], ["פרק", "פסוק", "מדרש"]],
+    (u'Chapter', u'Piska'): [[u'Chapter', u'Paragraph'], ["פרק", "פסקה"]],
+    (u'Volume', u'Chapter', u'Paragraph'): [[u'Volume', u'Chapter', u'Paragraph'], ["כרך", "פרק", "פסקה"]],
+    (u'Perek', u'Pasuk'): [[u'Chapter', u'Verse'], ["פרק", "פסוק"]],
+    (u'Perek', u'Pasuk'): [[u'Chapter', u'Verse'], ["פרק", "פסוק"]],
+    (u'Psalm', u'Comment'): [[u'Chapter', u'Comment'], ["פרק", "פירוש"]],
+    (u'Piska', u'Ot') : [[u'Chapter', u'Paragraph'], ["פסקא", "אות"]],
+    (u'Perek', u'Paragraph'): [[u'Chapter', u'Paragraph'], ["פרק", "פסקה"]],
+    (u'Remez', u'Paragraph'): [[u'Remez', u'Paragraph'], ["רמז", "פסקה"]],
+    (u'Perek', u'Pasuk', u'Paragraph'): [[u'Chapter', u'Verse', u'Paragraph'], ["פרק", "פסוק", "פסקה"]],
+    (u'Piska', u'Paragraph'): [[u'Chapter', u'Paragraph'], ["", "פסקה"]],
+    (u'Perek', u'Pasuk', u'Comment'): [[u'Chapter', u'Verse', u'Comment'], ["פרק", "פסוק", "פירוש"]],
+    (u'Chapter', u'Tosefta'): [[u'Chapter', u'Tosefta'], ["פרק", "תוספתא"]],
+    (u'Chapter', u'Halakhah'): [[u'Chapter', u'Halakhah'], ["פרק", "הלכה"]],
+    (u'Chapter', u'Halakhah', u'Comment'): [[u'Chapter', u'Halakhah', u'Comment'], ["פרק", "הלכה", "פירוש"]],
+    (u'Mitzvah',): [[u'Commandment'], ["מצוה"]],
+    (u'Chapter', u'Halacha'): [[u'Chapter', u'Halakhah'], ["פרק", "הלכה"]],
+    (u'Chapter', u'Halacha', u'Comment'): [[u'Chapter', u'Halakhah', u'Comment'], ["פרק", "הלכה", "פירוש"]],
+    (u'Siman', u"Se'if"): [[u'Siman', u"Seif"], ["סימן", "סעיף"]],
+    (u'Siman', u'Seif Katan'): [[u'Siman', u'Seif Katan'], ["סימן", "סעיף קטן"]],
+    (u'Siman', u"Se'if Katan"): [[u'Siman', u"Seif Katan"], ["סימן", "סעיף קטן"]],
+    (u'Siman', u'Seif'): [[u'Siman', u'Seif'], ["סימן", "סעיף"]],
+    (u'Siman', u'Seif', u'Paragraph'): [[u'Siman', u'Seif', u'Paragraph'], ["סימן", "סעיף", "פסקה"]],
+    (u'Siman', u'Seif', u'Comment'): [[u'Siman', u'Seif', u'Comment'], ["סימן", "סעיף", "פירוש"]],
+    (u'Siman', u"Se'if", u'Comment'): [[u'Siman', u"Seif", u'Comment'], ["סימן", "סעיף", "פירוש"]],
+    (u'פרק', u"סעיף"): [[u'Paragraph', u"Seif"], ["סימן", "סעיף"]],
+    (u'Chelek', u'Siman', u"Se'if") : [[u'Part', u'Siman', u"Seif"], ["חלק", "סימן", "סעיף"]],
+    (u'Chelek', u'Siman', u'Seif'): [[u'Part', u'Siman', u'Seif'], ["חלק", "סימן", "סעיף"]],
+    (u"Sha'ar", u'paragraph'): [[u"Gate", u'paragraph'], ["שער", "פסקה"]],
+    (u'Chapter', u'Law') : [ [u'Chapter', u'Halakhah'] , [ "פרק", "הלכה"]],
+    (u'Book', u'Chapter', u'Section'): [[u'Book', u'Chapter', u'Section'], ["ספר", "פרק", "חלק"]],
+    (u'Volume', u'Daf', u'Paragraph'): [[u'Volume', u'Page', u'Paragraph'], ["כרך", "דף", "פסקה"]],
+    (u'Number',): [[u'Seif'], ["סעיף"]],  # Da'at Tevunoth
+    (u'Section',): [[u'Section'], ["חלק"]],
+    (u'Parsha', u'Paragraph'): [[u'Parsha', u'Paragraph'], ["פרשה", "פסקה"]],
+    (u'Heichal', u"Sha'ar", u'Paragraph') : [ [u'Heichal', u"Sha'ar", u'Paragraph'] , [ "היכל", "שער", "פסקה"]],
+    (u"Se'if",): [[u"Seif"], ["סעיף"]],
+    (u'Chapter', u'Comment'): [[u'Chapter', u'Comment'], ["פרק", "פירוש"]],
+    (u'Chapter', u'Mishnah'): [[u'Chapter', u'Mishna'], ["פרק", "משנה"]],
+    (u'Line',): [[u'Line'], ["שורה"]],
+    (u'Liturgy',): [[u'Line'], ["שורה"]],
+    (u'Hadran',): [[u'Line'], ["שורה"]],
+    (u'section',): [[u'Section'], ["פסקה"]],
+    (u'Verse', u'Verset'): [[u'Verse', u'Verset'], ["בית", "שורה"]],
+    (u'Perek', u'Line'): [[u'Chapter', u'Line'], ["פרק", "שורה"]],
+    (u'Day of Week', u'Section'): [[u'Day', u'Section'], ["יום", "חלק"]],
+    (u'Psalm',): [[u'Paragraph'], ["פסקה"]],
+    (u'Paragraphs',): [[u'Paragraph'], ["פסקה"]],
+    (u'Drush', u'Paragraph'): [[u'Drush', u'Paragraph'], ["דרוש", "פסקה"]],
+    (u'Letter', u'Paragraph'): [[u'Letter', u'Paragraph'], ["אות", "פסקה"]],
+    (u'Volume', u'Section', u'Teaching', u''): [[u'Volume', u'Section', u'Teaching', u''], ["כרך", "חלק", "פסקה", ""]],
+    (u'Essay', u'Statement'): [[u'Essay', u'Statement'], ["מאמר", "ציטוט"]],
+    (u'Kovetz', u'Paragraph', u'Segment '): [[u'Kovetz', u'Paragraph', u'Segment '], ["קובץ", "פסקה", "", ]],
+    (u'Parashah', u'Torah', u'Section'): [[u'Parsha', u'Torah', u'Section'], ["פרשה", "תורה", "חלק"]],
+    (u'Part', u'Chapter', u'Paragraph'): [[u'Part', u'Chapter', u'Paragraph'], ["חלק", "פרק", "פסקה"]],
+    (u'Mitzvah', u'Paragraph'): [[u'Mitzvah', u'Paragraph'], ["מצוה", "פסקה"]],
+    (u'Volume ', u'Chapter', u'Paragraph'): [[u'Volume', u'Chapter', u'Paragraph'], ["כרך", "פרק", "פסקה"]],
+    (u'Story', u'Paragraph'): [[u'Story', u'Paragraph'], ["סיפור", "פסקה"]],
+    (u'Parshah', u'Siman'): [[u'Parsha', u'Siman'], ["פרשה", "סימן"]],
+    (u'Subject', u'Page', u''): [[u'Parsha', u'Page', u''], ["פרשה", "", "", ]],
+    (u'Parshah', u'Siman Katan'): [[u'Parsha', u'Siman Katan'], ["פרשה", "", ]],
+    (u'Shar', u'Chapter', u'Paragraph'): [[u'Gate', u'Chapter', u'Paragraph'], ["שער", "פרק", "פסקה"]],
+    (u'Perek', u'Seif', u'Paragraph'): [[u'Chapter', u'Section', u'Paragraph'], ["פרק", "סעיף", "פסקה"]],
+    (u"Sha'ar Ha'Gemul",): [[u"Paragraph"], ["פסקה"]],
+    (u'Chapter',): [[u'Chapter'], ["פרק"]],
+    (u'Chapter', u'Paragraph', u'Footnote'): [[u'Chapter', u'Paragraph', u'Footnote'], ["פרק", "פסקה", "הערת שוליים"]],
+    (u'Teshuva', u'Paragraph'): [[u'Response', u'Paragraph'], ["תשובה", "פסקה"]],
+    (u'Teshuva', u'Part'): [[u'Response', u'Part'], ["תשובה", "חלק"]],
+    (u'Question', u'Paragraph'): [[u'Question', u'Paragraph'], ["שאלה", "פסקה"]],
+    (u'Teshuva', u'Paragraph', u'Comment'): [[u'Response', u'Paragraph', u'Comment'], ["תשובה", "פסקה", "פירוש"]],
+    (u'Perek', u'Verse'): [[u'Chapter', u'Verse'], ["פרק", "פסוק"]],
+    (u'Verse',): [[u'Verse'], ["פסוק"]],
+    (u'Chapter', u'Footnote'): [[u'Chapter', u'Footnote'], ["פרק", "הערת שוליים"]],
 
-flat_sections = ["Chapter", "Gate"]
+}
+
+flat_sections = ["Chapter", "Gate", "Page", "Siman", "Parsha", "Day", "Drush", "Letter", "Essay", "Kovetz",
+                 "Mitzvah", "Story", "Response", "Question"]
+single_sections = ["Paragraph", "Halacha", "Remez", "Commandment", "Seif", "Section", "Line", "Verse"]
+level_sections = ["Volume", "Part", "Book", "Heichal"]
 
 
 def sef_logger():
@@ -130,45 +247,82 @@ class TOC(object):
                 langs = dict()
                 he, en = None, None
                 he_text, en_text = [], []
-                schema = json.load(open("{}/schemas/{}.json".format(self.export_path, title.replace(' ', '_'))))
+                schema = None
+                try:
+                    schema = json.load(open("{}/schemas/{}.json".format(self.export_path, title.replace(' ', '_'))))
+                except Exception:
+                    logger.error("empty schema: {}/schemas/{}.json".format(self.export_path, title.replace(' ', '_')))
                 is_complex = False
                 if os.path.isfile(src_dir + he_file):
                     he = json.load(open(src_dir + he_file))
-                    langs['he'] = (he, he["text"])
+                    langs['he'] = [he, he["text"]]
                     if "schema" in he:
                         is_complex = True
                     #shutil.copy(src_dir + he_file, "{}/{}.he.json".format(self.json_dir, self.counter))
                 if os.path.isfile(src_dir + en_file):
                     en = json.load(open(src_dir + en_file))
-                    langs['en'] = (en, en["text"])
+                    langs['en'] = [en, en["text"]]
                     if "schema" in en:
                         is_complex = True
                     #shutil.copy(src_dir + en_file, "{}/{}.en.json".format(self.json_dir, self.counter))
+                is_level = 0
                 if not is_complex:
                     sections = schema["schema"]["sectionNames"]
+                    if sections in [[u'Line', u''], [u'Piyyut', u'Verse'], [u'Part', u'Line']]:
+                        for lang in langs:
+                            langs[lang][1] = langs[lang][1][0]
+                            sections = [u'Line']
                     if tuple(sections) not in known_sections:
-                        print '[',
+                        print tuple(sections), ": [", sections,
+                        print ', [',
                         for k in schema["schema"]["heSectionNames"]:
                             print unicode('"'+k+'",').encode('utf-8'),
-                        print ']'
+                        print ']],'
 
                         raise KeyError('title:{} unknown section: {} '.format(title, sections))
-                    if sections[0] in flat_sections:
+                    correct_sections = known_sections[tuple(sections)]
+                    # if hierarchy not set right
+                    if correct_sections[0] in [[u'Line', u'']]:
+                        for lang in langs:
+                            langs[lang][1] = langs[lang][1][0]
+                        correct_sections = [[u'Line'], ["שורה"]]
+                    if correct_sections[0][0] in level_sections:
+                        is_level = 2
+                        for lang in langs:
+                            for volume, volume_data in enumerate(langs[lang][1]):
+                                length = max(length, volume + 1)
+                                for chap, data in enumerate(volume_data):
+                                    json.dump(data, open("{}/{}.{}.{}.{}.json".format(self.json_dir, self.counter,
+                                                                                      volume, chap, lang), 'w+'))
+
+                    elif correct_sections[0][0] in flat_sections:
+                        is_level = 1
                         for lang in langs:
                             for chap, data in enumerate(langs[lang][1]):
                                 length = max(length, chap+1)
                                 json.dump(data, open("{}/{}.{}.{}.json".format(self.json_dir, self.counter,
                                                                                chap, lang), 'w+'))
-
-                self.toc_file.write('{}<node n="{}" en="{}" i="{}" chaps="{}" lang="{}"/>\n'.
+                    elif correct_sections[0][0] in single_sections:
+                        is_level = 0
+                        for lang in langs:
+                            json.dump(langs[lang][1], open("{}/{}.{}.json".format(self.json_dir, self.counter,
+                                                                                     lang), 'w+'))
+                    else:
+                        raise KeyError('title:{} unknown section layout: {}'.format(title, correct_sections))
+                else:
+                    # complex text
+                    logger.warning("complex: {}".format(title))
+                    raise
+                self.toc_file.write('{}<node n="{}" en="{}" i="{}" chaps="{}" lang="{}" level="{}"/>\n'.
                                     format(' ' * 4 * level, he_title.
                                     encode('utf-8').replace('"', "''"),
                                     title,
                                     self.counter,
                                     length,
-                                    lang_type))
+                                    lang_type,
+                                    is_level))
                 self.toc_data['hebrew_index'][self.counter] = he_title.encode('utf-8').replace('"', "''")
-                self.toc_data['books_index'][self.counter] = title
+                self.toc_data['books_index'][self.counter] = [title, is_level]
                 self.toc_data['reverse_index'][title] = self.counter
                 self.counter += 1
 
@@ -198,12 +352,12 @@ class TOC(object):
                               "Haggahot and Marei Mekomot", "Kisse Rahamim", "Mesorat HaShas", "Mitzpeh Etan",
                               "Kessef Mishneh", "Lev Sameach"]:
                     item["base_text_mapping"] = "one_to_one"
-                if title in ["Shita Mekubetzet on Berakhot", 'Shita Mekubetzet on Beitzah']:
+                if title in add_base_title_from_on:
                     item["base_text_mapping"] = "one_to_one"
                     item["base_text_titles"] = [title.split('on ')[1]]
                 if "Minchat Shai" in title and title != "Minchat Shai on Torah":
                     item["base_text_mapping"] = "one_to_one"
-                if "Ba'er Hetev on Shulchan Arukh" in title:
+                if "Ba'er Hetev on Shulchan Arukh" in title or "Beur HaGra on Shulchan Arukh" in title:
                     item["base_text_mapping"] = "one_to_one"
                     item["base_text_titles"] = [title.split('on ')[1]]
                 if title in ["Gra on Pirkei Avot", "Lechem Shamayim on Pirkei Avot", "Rabbeinu Yonah on Pirkei Avot"]\
@@ -228,8 +382,12 @@ class TOC(object):
                         else:
                             logger.error("invalid len base_text_titles: {} in: {}, mapping: {}".format(len(item["base_text_titles"]),
                                                                                                title,item["base_text_mapping"]))
-                    orig_id = self.toc_data["reverse_index"][item["base_text_titles"][0].replace('_', ' ')]
-                    comment_id = self.toc_data["reverse_index"][title]
+                    try:
+                        orig_id = self.toc_data["reverse_index"][item["base_text_titles"][0].replace('_', ' ')]
+                        comment_id = self.toc_data["reverse_index"][title]
+                    except Exception:
+                        logger.error("complex not ready yet (?): {}".format(title))
+                        continue
                     self.toc_data["commentary"][orig_id].append((comment_id, 0))
                 elif item.get("base_text_titles"):
                     if title in not_direct_commentary or item["collectiveTitle"] in collective_not_direct_commentary:
@@ -237,10 +395,7 @@ class TOC(object):
                             orig_id = self.toc_data["reverse_index"][i]
                             comment_id = self.toc_data["reverse_index"][title]
                             self.toc_data["commentary"][orig_id].append((comment_id, 2))
-                    elif title in ["Ibn Ezra on Lamentations", "Ralbag on Song of Songs", "Ralbag Ruth",
-                                   "Ralbag Esther", "Magen Avot", "Haggahot Ya'avetz on Tractate Derekh Eretz Zuta",
-                                   'Nahalat Yaakov on Tractate Derekh Eretz Zuta'] or \
-                                    "Tosafot Yom Tov on" in title:
+                    elif title in complex_commentary_empty_string or "Tosafot Yom Tov on" in title:
                         orig_id = self.toc_data["reverse_index"][item["base_text_titles"][0].replace('_', ' ')]
                         comment_id = self.toc_data["reverse_index"][title]
                         self.toc_data["commentary"][orig_id].append((comment_id, 3))
@@ -254,8 +409,9 @@ class TOC(object):
                         self.verify_comment(item)
                         raise
 
-
                 else:
+                    if title in ["Darchei HaTalmud", "Introductions to the Babylonian Talmud"]:
+                        continue
                     if title not in ['JPS 1985 Footnotes'] and not bool([1 for x in [(z in title) for z in ['Rambam Introduction to', 'Tosafot Yom Tov Introduction']] if x]):
                         logger.warning(title)
                         raise
