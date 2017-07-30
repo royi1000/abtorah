@@ -178,6 +178,8 @@ flat_sections = ["Chapter", "Gate", "Page", "Siman", "Parsha", "Day", "Drush", "
 single_sections = ["Paragraph", "Halacha", "Remez", "Commandment", "Seif", "Section", "Line", "Verse"]
 level_sections = ["Volume", "Part", "Book", "Heichal"]
 
+known_complex = [""]
+
 
 def sef_logger():
     color_formatter = ColoredFormatter("%(log_color)s %(asctime)s - %(name)s - %(levelname)s - %(message)s%(reset)s")
@@ -205,6 +207,13 @@ class TOC(object):
         # for fast debug
         self.skip = False
         self.skip_title = "Biur Halacha"
+        self.section_types = []
+
+    def get_section_type(self, sections):
+        correct_sections = known_sections[tuple(sections)]
+        if correct_sections not in self.section_types:
+            self.section_types.append(correct_sections)
+        return correct_sections, self.section_types.index(correct_sections)
 
     def walk_on_toc(self, toc_file_name="toc.xml"):
         if not os.path.exists(self.json_dir):
@@ -213,6 +222,93 @@ class TOC(object):
         self.toc_file.write('<?xml version="1.0" ?>\n<index name="onyourway">\n')
         self.walk_on_items(self.toc)
         self.toc_file.write('</index>')
+
+    def handle_complex(self, schema, langs, level, names=None):
+        names['he'].append(schema['heTitle'])
+        names['en'].append(schema['title'])
+        self.toc_file.write('{}<node n="{}" en="{}">\n'.format(' ' * 4 * level,
+                                                               names['he'][-1].
+                                                               encode('utf-8').replace('"', "''"),
+                                                               names['en'][-1]))
+        for node in schema:
+            node_short_names = dict(en=node['title'], he=node['heTitle'])
+            node_long_names = dict(he=names['he'][:].append(node['heTitle']), en=names['en'][:].append(node['title']))
+            for lang in langs:
+                node_langs[lang] = langs[lang][node['title']]
+            if 'nodes' in node:
+                node_langs = {}
+                self.handle_complex(node, node_langs, level+1, names)
+            else:
+                self.handle_item(node_langs, node_short_names, node_long_names,
+                                 dict(he=node['heSectionNames'], en=node['sectionNames']), level)
+
+    def handle_item(self, langs, short_titles, long_titles, sections, level):
+        length = 0
+        is_level = 0
+        lang_type = 'both'
+        if 'en' not in langs:
+            lang_type = 'he'
+        elif 'he' not in langs:
+            lang_type = 'en'
+        if sections['en'] in [[u'Line', u''], [u'Piyyut', u'Verse'], [u'Part', u'Line']]:
+            for lang in langs:
+                langs[lang] = langs[lang][0]
+                sections['en'] = [u'Line']
+        if tuple(sections['en']) not in known_sections:
+            print tuple(sections['en']), ": [", sections['en'],
+            print ', [',
+            for k in sections['he']:
+                print unicode('"' + k + '",').encode('utf-8'),
+            print ']],'
+
+            raise KeyError('title:{} unknown section: {} '.format(short_titles['he'], sections['en']))
+
+        correct_sections, section_index = self.get_section_type(sections['en'])
+        # if hierarchy not set right
+        if correct_sections[0] in [[u'Line', u'']]:
+            for lang in langs:
+                langs[lang] = langs[lang][0]
+            correct_sections = [[u'Line'], ["שורה"]]
+        if correct_sections[0][0] in level_sections:
+            is_level = 2
+            for lang in langs:
+                for volume, volume_data in enumerate(langs[lang]):
+                    length = max(length, volume + 1)
+                    for chap, data in enumerate(volume_data):
+                        json.dump(data, open("{}/{}.{}.{}.{}.json".format(self.json_dir, self.counter,
+                                                                          volume, chap, lang), 'w+'))
+
+        elif correct_sections[0][0] in flat_sections:
+            is_level = 1
+            for lang in langs:
+                for chap, data in enumerate(langs[lang]):
+                    length = max(length, chap + 1)
+                    json.dump(data, open("{}/{}.{}.{}.json".format(self.json_dir, self.counter,
+                                                                   chap, lang), 'w+'))
+        elif correct_sections[0][0] in single_sections:
+            is_level = 0
+            for lang in langs:
+                json.dump(langs[lang], open("{}/{}.{}.json".format(self.json_dir, self.counter,
+                                                                   lang), 'w+'))
+        else:
+            raise KeyError('title:{} unknown section layout: {}'.format(short_titles['en'], correct_sections))
+
+        self.toc_file.write('{}<node n="{}" en="{}" i="{}" chaps="{}" lang="{}" level="{}"/>\n'.
+                            format(' ' * 4 * level, short_titles['he'].
+                                   encode('utf-8').replace('"', "''"),
+                                   short_titles['en'],
+                                   self.counter,
+                                   length,
+                                   lang_type,
+                                   is_level))
+
+        self.toc_data['hebrew_long_index'][self.counter] = ', '.join([x.encode('utf-8').replace('"', "''") for x in long_titles['he']])
+        self.toc_data['hebrew_short_index'][self.counter] = short_titles['he'].encode('utf-8').replace('"', "''")
+        self.toc_data['books_index'][self.counter] = [', '.join(long_titles['en']), is_level]
+        self.toc_data['books_short_index'][self.counter] = [short_titles['en'], is_level]
+        self.toc_data['reverse_index'][', '.join(long_titles['en'])] = self.counter
+        self.toc_data['book_section_type'][self.counter] = section_index
+        self.counter += 1
 
     def walk_on_items(self, items, level=0, path='/json'):
         for item in items:
@@ -233,20 +329,10 @@ class TOC(object):
                     continue
                 self.skip = False
                 src_dir = self.export_path+path+'/'+title
-                lang_type = 'both'
                 if not os.path.isfile(src_dir+en_file) and not os.path.isfile(src_dir+he_file):
                     logger.error("missing lang, path: {}".format(src_dir))
                     continue
-                elif not os.path.isfile(src_dir + he_file):
-                    #logger.debug("missing he, path: {}".format(src_dir))
-                    lang_type = 'en'
-                elif not os.path.isfile(src_dir + en_file):
-                    #logger.debug("missing en, path: {}".format(src_dir))
-                    lang_type = 'he'
-                length = 0
                 langs = dict()
-                he, en = None, None
-                he_text, en_text = [], []
                 schema = None
                 try:
                     schema = json.load(open("{}/schemas/{}.json".format(self.export_path, title.replace(' ', '_'))))
@@ -255,76 +341,34 @@ class TOC(object):
                 is_complex = False
                 if os.path.isfile(src_dir + he_file):
                     he = json.load(open(src_dir + he_file))
-                    langs['he'] = [he, he["text"]]
+                    langs['he'] = he["text"]
                     if "schema" in he:
                         is_complex = True
-                    #shutil.copy(src_dir + he_file, "{}/{}.he.json".format(self.json_dir, self.counter))
                 if os.path.isfile(src_dir + en_file):
                     en = json.load(open(src_dir + en_file))
-                    langs['en'] = [en, en["text"]]
+                    langs['en'] = en["text"]
                     if "schema" in en:
                         is_complex = True
-                    #shutil.copy(src_dir + en_file, "{}/{}.en.json".format(self.json_dir, self.counter))
-                is_level = 0
                 if not is_complex:
-                    sections = schema["schema"]["sectionNames"]
-                    if sections in [[u'Line', u''], [u'Piyyut', u'Verse'], [u'Part', u'Line']]:
-                        for lang in langs:
-                            langs[lang][1] = langs[lang][1][0]
-                            sections = [u'Line']
-                    if tuple(sections) not in known_sections:
-                        print tuple(sections), ": [", sections,
-                        print ', [',
-                        for k in schema["schema"]["heSectionNames"]:
-                            print unicode('"'+k+'",').encode('utf-8'),
-                        print ']],'
+                    self.handle_item(langs, dict(en=title, he=he_title), dict(en=[title], he=[he_title]),
+                                     dict(en=schema["schema"]["sectionNames"], he=schema["schema"]["heSectionNames"]))
+                    # if len(correct_sections[0][is_level:]) > 1:
+                    #     logger.error("title: {}, level in file: {}, level: {}, sectoins: {}".format(title, len(correct_sections[0][is_level:]),
+                    #                                                                                 is_level, correct_sections[0]))
 
-                        raise KeyError('title:{} unknown section: {} '.format(title, sections))
-                    correct_sections = known_sections[tuple(sections)]
-                    # if hierarchy not set right
-                    if correct_sections[0] in [[u'Line', u'']]:
-                        for lang in langs:
-                            langs[lang][1] = langs[lang][1][0]
-                        correct_sections = [[u'Line'], ["שורה"]]
-                    if correct_sections[0][0] in level_sections:
-                        is_level = 2
-                        for lang in langs:
-                            for volume, volume_data in enumerate(langs[lang][1]):
-                                length = max(length, volume + 1)
-                                for chap, data in enumerate(volume_data):
-                                    json.dump(data, open("{}/{}.{}.{}.{}.json".format(self.json_dir, self.counter,
-                                                                                      volume, chap, lang), 'w+'))
-
-                    elif correct_sections[0][0] in flat_sections:
-                        is_level = 1
-                        for lang in langs:
-                            for chap, data in enumerate(langs[lang][1]):
-                                length = max(length, chap+1)
-                                json.dump(data, open("{}/{}.{}.{}.json".format(self.json_dir, self.counter,
-                                                                               chap, lang), 'w+'))
-                    elif correct_sections[0][0] in single_sections:
-                        is_level = 0
-                        for lang in langs:
-                            json.dump(langs[lang][1], open("{}/{}.{}.json".format(self.json_dir, self.counter,
-                                                                                     lang), 'w+'))
-                    else:
-                        raise KeyError('title:{} unknown section layout: {}'.format(title, correct_sections))
                 else:
                     # complex text
-                    logger.warning("complex: {}".format(title))
-                    raise
-                self.toc_file.write('{}<node n="{}" en="{}" i="{}" chaps="{}" lang="{}" level="{}"/>\n'.
-                                    format(' ' * 4 * level, he_title.
-                                    encode('utf-8').replace('"', "''"),
-                                    title,
-                                    self.counter,
-                                    length,
-                                    lang_type,
-                                    is_level))
-                self.toc_data['hebrew_index'][self.counter] = he_title.encode('utf-8').replace('"', "''")
-                self.toc_data['books_index'][self.counter] = [title, is_level]
-                self.toc_data['reverse_index'][title] = self.counter
-                self.counter += 1
+                    if title not in known_complex:
+                        logger.warning("complex: {}".format(title))
+                        raise
+                    names = dict(he=[schema['heTitle']], en=[schema['title']])
+                    schema = schema['schema']['nodes']
+                    self.toc_file.write('{}<node n="{}" en="{}">\n'.format(' ' * 4 * level,
+                                                                           names['he'][0].
+                                                                           encode('utf-8').replace('"', "''"),
+                                                                           names['en'][0]))
+                    self.handle_complex(schema=schema, langs=langs, level=level+1, names=names)
+
 
     def walk_on_commentary(self, items=None):
         # comment types: 0 - one on one, 1 - one on one dict, 2 - not direct, 3 - one on one dict (empty string key),
