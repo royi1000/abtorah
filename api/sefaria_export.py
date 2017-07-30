@@ -70,6 +70,7 @@ add_base_title_from_on = ["Shita Mekubetzet on Berakhot", 'Shita Mekubetzet on B
 
 known_sections = {
     (u'Chapter', u'Verse'): [[u'Chapter', u'Verse'], ["פרק", "פסוק"]],
+    (u'Chapter', u'Paragraph', u'Comment'): [[u'Chapter', u'Paragraph', u'Comment'], ["פרק", "פסקה", "פירוש"]],
     (u'Perek', u'Passuk'): [[u'Chapter', u'Verse'], ["פרק", "פסוק"]],
     (u'Chapter', u'Verse', u'Comment'): [[u'Chapter', u'Verse', u'Comment'], ["פרק", "פסוק", "פירוש"]],
     (u'Chapter', u'Verse', u'Paragraph'): [[u'Chapter', u'Verse', u'Paragraph'], ["פרק", "פסוק", "פסקה"]],
@@ -83,7 +84,7 @@ known_sections = {
     (u'Paragraph', ): [[u'Paragraph'], ["פסקה"]],
     (u'Section', u'Paragraph'): [[u'Gate', u'Paragraph'], ["חלק", "פסקה"]],
     (u'Chapter', u'comment'): [[u'Chapter', u'comment'], ["פרק", "פירוש"]],
-    (u'Perek', u'Mishnah', u'Paragraph'): [[u'Chapter', u'Mishnah', u'Paragraph'], ["פרק", "משנה", "פסקה"]],
+    (u'Perek', u'Mishnah', u'Paragraph'): [[u'Chapter', u'Mishna', u'Paragraph'], ["פרק", "משנה", "פסקה"]],
     (u'Chapter', u'Seif', u'Comment'): [[u'Chapter', u'Paragraph', u'Comment'], ["פרק", "סעיף", "פירוש"]],
     (u'Daf', u'Line'): [[u'Page', u'Line'], ["דף", "שורה"]],
     (u'Siman', u'Paragraph'): [[u'Siman', u'Paragraph'], ["סימן", "פסקה"]],
@@ -95,7 +96,7 @@ known_sections = {
     (u'Daf', u'Line', u'Comment'): [[u'Page', u'Line', u'Comment'], ["דף", "שורה", "פירוש"]],
     (u'Perek', u'Halacha', u'Siman'): [[u'Chapter', u'Halacha', u'Siman'], ["פרק", "הלכה", "סימן"]],
     (u'Halacha', u'Siman'): [[u'Halacha', u'Siman'], ["הלכה", "סימן"]],
-    (u'Daf', u'Halakhah'): [[u'Page', u'Halakhah'], ["דף", "הלכה"]],
+    (u'Daf', u'Halakhah'): [[u'Page', u'Halacha'], ["דף", "הלכה"]],
     (u'Chapter', u'Paragraph'): [[u'Chapter', u'Paragraph'], ["פרק", "פסקה"]],
     (u'Parasha', u'Perek', u'Midrash'): [[u'Chapter', u'Verse', u'Midrash'], ["פרק", "פסוק", "מדרש"]],
     (u'Chapter', u'Piska'): [[u'Chapter', u'Paragraph'], ["פרק", "פסקה"]],
@@ -110,11 +111,11 @@ known_sections = {
     (u'Piska', u'Paragraph'): [[u'Chapter', u'Paragraph'], ["", "פסקה"]],
     (u'Perek', u'Pasuk', u'Comment'): [[u'Chapter', u'Verse', u'Comment'], ["פרק", "פסוק", "פירוש"]],
     (u'Chapter', u'Tosefta'): [[u'Chapter', u'Tosefta'], ["פרק", "תוספתא"]],
-    (u'Chapter', u'Halakhah'): [[u'Chapter', u'Halakhah'], ["פרק", "הלכה"]],
-    (u'Chapter', u'Halakhah', u'Comment'): [[u'Chapter', u'Halakhah', u'Comment'], ["פרק", "הלכה", "פירוש"]],
+    (u'Chapter', u'Halakhah'): [[u'Chapter', u'Halacha'], ["פרק", "הלכה"]],
+    (u'Chapter', u'Halakhah', u'Comment'): [[u'Chapter', u'Halacha', u'Comment'], ["פרק", "הלכה", "פירוש"]],
     (u'Mitzvah',): [[u'Commandment'], ["מצוה"]],
-    (u'Chapter', u'Halacha'): [[u'Chapter', u'Halakhah'], ["פרק", "הלכה"]],
-    (u'Chapter', u'Halacha', u'Comment'): [[u'Chapter', u'Halakhah', u'Comment'], ["פרק", "הלכה", "פירוש"]],
+    (u'Chapter', u'Halacha'): [[u'Chapter', u'Halacha'], ["פרק", "הלכה"]],
+    (u'Chapter', u'Halacha', u'Comment'): [[u'Chapter', u'Halacha', u'Comment'], ["פרק", "הלכה", "פירוש"]],
     (u'Siman', u"Se'if"): [[u'Siman', u"Seif"], ["סימן", "סעיף"]],
     (u'Siman', u'Seif Katan'): [[u'Siman', u'Seif Katan'], ["סימן", "סעיף קטן"]],
     (u'Siman', u"Se'if Katan"): [[u'Siman', u"Seif Katan"], ["סימן", "סעיף קטן"]],
@@ -126,7 +127,7 @@ known_sections = {
     (u'Chelek', u'Siman', u"Se'if") : [[u'Part', u'Siman', u"Seif"], ["חלק", "סימן", "סעיף"]],
     (u'Chelek', u'Siman', u'Seif'): [[u'Part', u'Siman', u'Seif'], ["חלק", "סימן", "סעיף"]],
     (u"Sha'ar", u'paragraph'): [[u"Gate", u'paragraph'], ["שער", "פסקה"]],
-    (u'Chapter', u'Law') : [ [u'Chapter', u'Halakhah'] , [ "פרק", "הלכה"]],
+    (u'Chapter', u'Law') : [ [u'Chapter', u'Halacha'] , [ "פרק", "הלכה"]],
     (u'Book', u'Chapter', u'Section'): [[u'Book', u'Chapter', u'Section'], ["ספר", "פרק", "חלק"]],
     (u'Volume', u'Daf', u'Paragraph'): [[u'Volume', u'Page', u'Paragraph'], ["כרך", "דף", "פסקה"]],
     (u'Number',): [[u'Seif'], ["סעיף"]],  # Da'at Tevunoth
@@ -170,15 +171,22 @@ known_sections = {
     (u'Perek', u'Verse'): [[u'Chapter', u'Verse'], ["פרק", "פסוק"]],
     (u'Verse',): [[u'Verse'], ["פסוק"]],
     (u'Chapter', u'Footnote'): [[u'Chapter', u'Footnote'], ["פרק", "הערת שוליים"]],
+    (u'Comment',): [[u'Comment'], ["פירוש"]],
+    (u'Comment', u'Paragraph'): [[u'Comment', u'Paragraph'], ["פירוש", "פסקה"]],
+    (u'Chapter', u'Mishna', u'Paragraph'): [[u'Chapter', u'Mishna', u'Paragraph'], ["פרק", "משנה", "פסקה"]],
+    (u'Segment',): [[u'Paragraph'], ["פסקה"]],
+    (u'Halacha', u'siman'): [[u'Halacha', u'Siman'], ["הלכה", ""]],
+    (u'Seif', u''): [[u'Seif', u''], ["סעיף", ""]],
+    (u'Perek', u'Halacha', u'siman'): [[u'Chapter', u'Halacha', u'Siman'], ["פרק", "הלכה", ""]],
 
 }
 
 flat_sections = ["Chapter", "Gate", "Page", "Siman", "Parsha", "Day", "Drush", "Letter", "Essay", "Kovetz",
                  "Mitzvah", "Story", "Response", "Question"]
-single_sections = ["Paragraph", "Halacha", "Remez", "Commandment", "Seif", "Section", "Line", "Verse"]
+single_sections = ["Paragraph", "Halacha", "Remez", "Commandment", "Seif", "Section", "Line", "Verse", "Comment"]
 level_sections = ["Volume", "Part", "Book", "Heichal"]
 
-known_complex = [""]
+known_complex = ["Tafsir Rasag"]
 
 
 def sef_logger():
@@ -206,7 +214,7 @@ class TOC(object):
         self.toc_data["commentary"] = defaultdict(list)
         # for fast debug
         self.skip = False
-        self.skip_title = "Biur Halacha"
+        self.skip_title = "Shney Luchot HaBrit"
         self.section_types = []
 
     def get_section_type(self, sections):
@@ -223,24 +231,38 @@ class TOC(object):
         self.walk_on_items(self.toc)
         self.toc_file.write('</index>')
 
-    def handle_complex(self, schema, langs, level, names=None):
-        names['he'].append(schema['heTitle'])
-        names['en'].append(schema['title'])
-        self.toc_file.write('{}<node n="{}" en="{}">\n'.format(' ' * 4 * level,
-                                                               names['he'][-1].
-                                                               encode('utf-8').replace('"', "''"),
-                                                               names['en'][-1]))
-        for node in schema:
+    def handle_complex(self, schema, langs, level, names):
+        print_node = 0
+        if len(names['en']) > 1 or names['en'][0] != self.last_category:
+            print_node = 1
+            # self.toc_file.write('{}<node n="{}" en="{}">\n'.format(' ' * 4 * level,
+            #                                                        ', '.join([x.encode('utf-8').replace('"', "''") for x in
+            #                                                                   names['he']]),
+            #                                                        ', '.join(names['en'])))
+            self.toc_file.write('{}<node n="{}" en="{}">\n'.format(' ' * 4 * level,
+                                                                   names['he'][-1].encode('utf-8').replace('"', "''"),
+                                                                   names['en'][-1]))
+
+        for node in schema['nodes']:
             node_short_names = dict(en=node['title'], he=node['heTitle'])
-            node_long_names = dict(he=names['he'][:].append(node['heTitle']), en=names['en'][:].append(node['title']))
+            node_long_names = dict(he=names['he'][:], en=names['en'][:])
+            node_long_names['he'].append(node['heTitle'])
+            node_long_names['en'].append(node['title'])
+            node_langs = {}
             for lang in langs:
-                node_langs[lang] = langs[lang][node['title']]
+                try:
+                    node_langs[lang] = langs[lang][node['title']]
+                except KeyError:
+                    logger.error("title: {}, missing complex key: {}".format(node_long_names, node['title']))
+                    continue
             if 'nodes' in node:
-                node_langs = {}
-                self.handle_complex(node, node_langs, level+1, names)
+                self.handle_complex(node, node_langs, level+print_node, node_long_names)
             else:
                 self.handle_item(node_langs, node_short_names, node_long_names,
-                                 dict(he=node['heSectionNames'], en=node['sectionNames']), level)
+                                 dict(he=node['heSectionNames'],
+                                      en=node['sectionNames']), level+print_node)
+        if print_node:
+            self.toc_file.write('{}</node>\n'.format(' ' * 4 * level))
 
     def handle_item(self, langs, short_titles, long_titles, sections, level):
         length = 0
@@ -254,6 +276,8 @@ class TOC(object):
             for lang in langs:
                 langs[lang] = langs[lang][0]
                 sections['en'] = [u'Line']
+        if sections['en'] in [[u'Seif', u'Siman']]:
+            sections['en'] = [u'Seif', '']
         if tuple(sections['en']) not in known_sections:
             print tuple(sections['en']), ": [", sections['en'],
             print ', [',
@@ -261,7 +285,7 @@ class TOC(object):
                 print unicode('"' + k + '",').encode('utf-8'),
             print ']],'
 
-            raise KeyError('title:{} unknown section: {} '.format(short_titles['he'], sections['en']))
+            raise KeyError('title:{} unknown section: {} '.format(long_titles['en'], sections['en']))
 
         correct_sections, section_index = self.get_section_type(sections['en'])
         # if hierarchy not set right
@@ -313,6 +337,7 @@ class TOC(object):
     def walk_on_items(self, items, level=0, path='/json'):
         for item in items:
             if "category" in item:
+                self.last_category = item[u'category']
                 #logger.debug("category: {} {}".format(item["category"], item["heCategory"].encode('utf-8')))
                 if item['category'] in ['Targum Neofiti']:
                     logger.warning("skipped: {}".format(item['category']))
@@ -351,23 +376,19 @@ class TOC(object):
                         is_complex = True
                 if not is_complex:
                     self.handle_item(langs, dict(en=title, he=he_title), dict(en=[title], he=[he_title]),
-                                     dict(en=schema["schema"]["sectionNames"], he=schema["schema"]["heSectionNames"]))
+                                     dict(en=schema["schema"]["sectionNames"], he=schema["schema"]["heSectionNames"]),
+                                     level)
                     # if len(correct_sections[0][is_level:]) > 1:
                     #     logger.error("title: {}, level in file: {}, level: {}, sectoins: {}".format(title, len(correct_sections[0][is_level:]),
                     #                                                                                 is_level, correct_sections[0]))
 
                 else:
                     # complex text
-                    if title not in known_complex:
-                        logger.warning("complex: {}".format(title))
-                        raise
+                    # if title not in known_complex:
+                    #     logger.warning("complex: {}".format(title))
+                    #     raise
                     names = dict(he=[schema['heTitle']], en=[schema['title']])
-                    schema = schema['schema']['nodes']
-                    self.toc_file.write('{}<node n="{}" en="{}">\n'.format(' ' * 4 * level,
-                                                                           names['he'][0].
-                                                                           encode('utf-8').replace('"', "''"),
-                                                                           names['en'][0]))
-                    self.handle_complex(schema=schema, langs=langs, level=level+1, names=names)
+                    self.handle_complex(schema=schema['schema'], langs=langs, level=level, names=names)
 
 
     def walk_on_commentary(self, items=None):
