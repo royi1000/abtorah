@@ -250,15 +250,20 @@ known_sections = {
     (u'Manuscript', u'Paragraph'): [[u'Manuscript', u'Paragraph'], ["כתב יד", "פסקה"]],
     (u'Chapter', u'Section', u'Paragraph'): [[u'Chapter', u'Section', u'Paragraph'], ["פרק", "חלק", "פסקה"]],
     (u'Mishnah', u'Paragraph'): [[u'Mishna', u'Paragraph'], ["משנה", "פסקה"]],
-    (u'Word', u'Paragraph') : [ [u'Word', u'Paragraph'] , [ "מלה", "פסקה", ]],
+    (u'Word', u'Paragraph'): [[u'Word', u'Paragraph'], ["מלה", "פסקה"]],
     (u'Principle', u'Paragraph'): [[u'Principle', u'Paragraph'], ["עקרון", "פסקה"]],
     (u'Chapter', u'S'): [[u'Chapter', u'Paragraph'], ["פרק", "פסקה"]],
+    (u'Line', u''): [[u'Line', u''], ["שורה", ""]],
+    (u'Piyyut', u'Verse'): [[u'Piyyut', u'Verse'], ["", "פסוק"]],
+    (u'Part', u'Line'): [[u'Paragraph', u'Line'], ["בית", "שורה"]],
+
 }
 
 flat_sections = ["Chapter", "Gate", "Page", "Siman", "Parsha", "Day", "Drush", "Letter", "Essay", "Kovetz",
                  "Mitzvah", "Story", "Response", "Question", "Shoresh", "Shoket", "River", "Path", "Treatise",
                  "Epistle", "Torah", "Manuscript", "Word", "Principle"]
-single_sections = ["Paragraph", "Halacha", "Remez", "Commandment", "Seif", "Section", "Line", "Verse", "Comment", "Mishna"]
+single_sections = ["Paragraph", "Halacha", "Remez", "Commandment", "Seif", "Section", "Line", "Verse", "Comment",
+                   "Mishna", "Piyyut"]
 level_sections = ["Volume", "Part", "Book", "Heichal"]
 
 
@@ -373,10 +378,12 @@ class TOC(object):
             lang_type = 'he'
         elif 'he' not in langs:
             lang_type = 'en'
+        """
         if sections['en'] in [[u'Line', u''], [u'Piyyut', u'Verse'], [u'Part', u'Line']]:
             for lang in langs:
                 langs[lang] = langs[lang][0]
                 sections['en'] = [u'Line']
+        """
         if sections['en'] in [[u'Seif', u'Siman']]:
             sections['en'] = [u'Seif', '']
         if tuple(sections['en']) not in known_sections:
@@ -781,23 +788,29 @@ class TOC(object):
 
     def insert_ref(self, refa, refb):
         sections = self.get_sction_from_index(self.toc_data['book_section_type'][int(refa[0])])[0][:]
+        if refa[0] == '1' and refa[1] == '28' and len(refa)>2 and refa[2] == '61':
+            pass
         ref = self.refs[refa[0]]
+        """
         if sections == [u'Line']:
             if len(refa[1:]) > 1:
                 logger.debug(
                     "align line level, src: {} {}".format(self.toc_data["books_index"][int(refa[0])], refa))
                 assert (refa[1] == '1')
                 refa.pop(1)
+        """
         for r in refa[1:]:
             sections.pop(0)
+            if type(ref) is list:
+                raise
             if r == '0':
-                pass
+                raise
             if r not in ref:
                 if sections:
                     ref[r] = {}
                 else:
                     ref[r] = []
-                ref = ref[r]
+            ref = ref[r]
         if type(ref) is list:
             ref.append(refb)
         else:
@@ -834,6 +847,7 @@ class TOC(object):
                     ignore = False
                     count = True
                     row[1] = row[1].replace('Ralbag on Iyov', 'Ralbag on Job')
+                    """
                     for r in [row[3], row[4]]:
                         if txt_in_partial_list(r, ['Rif', "B'Mareh HaBazak", "Ba'er Hetev", "Ikar Tosafot Yom Tov on ", 'Mordechai on ', 'Rosh',
                                                    'Shita Mekubetzet on Bava Metzia', "Be'er Mayim Chaim", "Darchei Moshe", 'Bemidbar Rabbah',
@@ -867,8 +881,10 @@ class TOC(object):
                         count = False
                     elif row[2] in ['ein mishpat / ner mitsvah', 'automatic mesorat hashas']:
                         count = False
+                    """
                     s_refs = []
                     num_ref_str = []
+                    orig_ref_str = []
                     for ref in refs:
                         ref = ref.replace('Ralbag on Iyov', 'Ralbag on Job')
                         ref = ref.replace('Rashi on Num ', 'Rashi on Numbers ')
@@ -880,15 +896,19 @@ class TOC(object):
                             if ref in self.toc_data["reverse_index"] or ref+', ' in self.toc_data["reverse_index"]:  # no digit in end, use all
                                 key = ref
                                 num_ref = ''
+                                orig_ref_str.append('')
                             else:
                                 key = ' '.join(s[:-1])
                                 num_ref = s[-1]
+                                orig_ref_str.append(s[-1])
                             if key not in self.toc_data["reverse_index"]:
                                 key += ', '
                             _id = self.toc_data["reverse_index"][key]
 
                         except KeyError as e:
                             logger.error("key not found: " + key)
+                            ignore = True
+                            continue
                             raise e
                         if '-' in num_ref:
                             logger.debug("- in ref {}".format(ref))
@@ -900,6 +920,8 @@ class TOC(object):
                             res_num_ref.append(part_num_ref)
                         num_ref_str.append(':'.join(res_num_ref))
                         s_refs.append([str(_id)] + res_num_ref)
+
+                    """
                     if ignore:
                         continue
                     if count and (num_ref_str[0] == num_ref_str[1] or ((len(num_ref_str[1].split(':')) > 1 and
@@ -950,6 +972,7 @@ class TOC(object):
 
                                         else:
                                             logger.warning("one by one chapter mark failed{}".format(row))
+                    """
                     if not ignore:
                         if count and [row[3], row[4]] not in ignore_pairs:
                             pairs[(s_refs[0][0], s_refs[1][0])].append(row)
@@ -958,9 +981,9 @@ class TOC(object):
                                     logger.error("too many pairs: {}".format([row[3], row[4]]))
                                     # print [row[3], row[4]]
                                     ignore_pairs.append([row[3], row[4]])
-                        self.insert_ref(s_refs[0], s_refs[1])
-                        self.insert_ref(s_refs[1], s_refs[0])
-                        valid_link_count += 1
+                        self.insert_ref(s_refs[0], [s_refs[1][0], orig_ref_str[1]])
+                        self.insert_ref(s_refs[1], [s_refs[0][0], orig_ref_str[0]])
+                        # valid_link_count += 1
         logger.info("link count: {} valid link count: {}".format(link_count, valid_link_count))
         for r in self.refs:
             json.dump(self.refs[r], open("{}/{}.ref.json".format(self.json_dir, r), 'w+'))
@@ -1013,3 +1036,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    
