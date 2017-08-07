@@ -1,3 +1,4 @@
+[
     {
         "category": "Tanakh", 
         "heCategory": "תנ\"ך", 
@@ -31303,6 +31304,32 @@
                                         "contents": [
                                             {
                                                 "refs_to_base_texts": {
+                                                    "Ketubot": "Ritva on Ketubot 2a"
+                                                }, 
+                                                "base_text_titles": [
+                                                    "Ketubot"
+                                                ], 
+                                                "firstSection": "Ritva on Ketubot 2a", 
+                                                "title": "Ritva on Ketubot", 
+                                                "dependence": "Commentary", 
+                                                "order": 14, 
+                                                "heCommentator": "ריטב\"א", 
+                                                "heTitle": "ריטב\"א על כתובות", 
+                                                "sparseness": 4, 
+                                                "heCollectiveTitle": "ריטב\"א", 
+                                                "collectiveTitle": "Ritva", 
+                                                "commentator": "Ritva", 
+                                                "primary_category": "Commentary", 
+                                                "categories": [
+                                                    "Talmud", 
+                                                    "Bavli", 
+                                                    "Commentary", 
+                                                    "Ritva", 
+                                                    "Seder Nashim"
+                                                ]
+                                            }, 
+                                            {
+                                                "refs_to_base_texts": {
                                                     "Kiddushin": "Ritva on Kiddushin 2a"
                                                 }, 
                                                 "base_text_titles": [
@@ -35019,7 +35046,7 @@
                         "firstSection": "Ein Yaakov, Berakhot 1", 
                         "title": "Ein Yaakov", 
                         "dependence": false, 
-                        "heTitle": "עין יעקב‎", 
+                        "heTitle": "עין יעקב", 
                         "sparseness": 4, 
                         "primary_category": "Midrash", 
                         "categories": [
@@ -35031,7 +35058,7 @@
                         "firstSection": "Ein Yaakov (Glick Edition), Berakhot 1", 
                         "title": "Ein Yaakov (Glick Edition)", 
                         "dependence": false, 
-                        "heTitle": "עין יעקב (מאת שמואל צבי גליק) ", 
+                        "heTitle": "עין יעקב (מאת שמואל צבי גליק)", 
                         "sparseness": 4, 
                         "primary_category": "Midrash", 
                         "categories": [
@@ -46528,7 +46555,7 @@
                         "contents": [
                             {
                                 "refs_to_base_texts": {
-                                    "Sefer Yetzirah": "Raavad on Sefer Yetzirah, Introduction, The Fifty Gates of Understanding 1:1"
+                                      "Sefer Yetzirah": "Raavad on Sefer Yetzirah, Introduction, The Fifty Gates of Understanding 1:1"
                                 }, 
                                 "base_text_titles": [
                                     "Sefer Yetzirah"
@@ -46924,7 +46951,7 @@
                 "firstSection": "Akdamut Milin 1", 
                 "title": "Akdamut Milin", 
                 "dependence": false, 
-                "heTitle": "אַקְדָּמוּת מִלִּין ", 
+                "heTitle": "אַקְדָּמוּת מִלִּין", 
                 "sparseness": 4, 
                 "primary_category": "Liturgy", 
                 "categories": [
@@ -47608,6 +47635,34 @@
         "heCategory": "חסידות", 
         "contents": [
             {
+                "refs_to_base_texts": {
+                    "Deuteronomy": "Be'er Mayim Chaim, Genesis 1:1", 
+                    "Leviticus": "Be'er Mayim Chaim, Genesis 1:1", 
+                    "Exodus": "Be'er Mayim Chaim, Genesis 1:1", 
+                    "Genesis": "Be'er Mayim Chaim, Genesis 1:1", 
+                    "Numbers": "Be'er Mayim Chaim, Genesis 1:1"
+                }, 
+                "base_text_titles": [
+                    "Genesis", 
+                    "Exodus", 
+                    "Leviticus", 
+                    "Numbers", 
+                    "Deuteronomy"
+                ], 
+                "firstSection": "Be'er Mayim Chaim, Genesis 1:1", 
+                "title": "Be'er Mayim Chaim", 
+                "dependence": "Commentary", 
+                "order": 5, 
+                "heTitle": "באר מים חיים", 
+                "sparseness": 2, 
+                "heCollectiveTitle": "באר מים חיים", 
+                "collectiveTitle": "Be'er Mayim Chaim", 
+                "primary_category": "Chasidut", 
+                "categories": [
+                    "Chasidut"
+                ]
+            }, 
+            {
                 "category": "Early Works", 
                 "heCategory": "ספרי ראשית", 
                 "contents": [
@@ -47779,6 +47834,18 @@
                         "dependence": false, 
                         "heTitle": "ליקוטי הלכות", 
                         "sparseness": 2, 
+                        "primary_category": "Chasidut", 
+                        "categories": [
+                            "Chasidut", 
+                            "Breslov"
+                        ]
+                    }, 
+                    {
+                        "firstSection": "Sefer HaMidot, Introduction", 
+                        "title": "Sefer HaMidot", 
+                        "dependence": false, 
+                        "heTitle": "ספר המדות", 
+                        "sparseness": 1, 
                         "primary_category": "Chasidut", 
                         "categories": [
                             "Chasidut", 
@@ -48117,6 +48184,17 @@
                 ]
             }, 
             {
+                "firstSection": null, 
+                "title": "Imrei Binah", 
+                "dependence": false, 
+                "heTitle": "אמרי בּינה", 
+                "sparseness": 1, 
+                "primary_category": "Chasidut", 
+                "categories": [
+                    "Chasidut"
+                ]
+            }, 
+            {
                 "firstSection": "Mekor Mayyim Hayyim 1", 
                 "title": "Mekor Mayyim Hayyim", 
                 "dependence": false, 
@@ -48259,6 +48337,17 @@
                 "title": "Shaarei Teshuvah", 
                 "dependence": false, 
                 "heTitle": "שערי תשובה", 
+                "sparseness": 4, 
+                "primary_category": "Musar", 
+                "categories": [
+                    "Musar"
+                ]
+            }, 
+            {
+                "firstSection": "Shemiras HaLoshon 1", 
+                "title": "Shemiras HaLoshon", 
+                "dependence": false, 
+                "heTitle": "שמירת הלשון", 
                 "sparseness": 4, 
                 "primary_category": "Musar", 
                 "categories": [
@@ -49311,17 +49400,6 @@
                 "title": "Contemporary Halakhic Problems, Vol III", 
                 "dependence": false, 
                 "heTitle": "בעיות הלכתיות עכשוויות, כרך ג", 
-                "sparseness": 1, 
-                "primary_category": "Modern Works", 
-                "categories": [
-                    "Modern Works"
-                ]
-            }, 
-            {
-                "firstSection": null, 
-                "title": "Kehati Commentary on Mishnah", 
-                "dependence": false, 
-                "heTitle": "משניות קהתי", 
                 "sparseness": 1, 
                 "primary_category": "Modern Works", 
                 "categories": [
