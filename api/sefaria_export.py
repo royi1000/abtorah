@@ -299,6 +299,7 @@ class TOC(object):
         self.toc = json.load(open(self.export_path+'/table_of_contents.json'))
         self.toc_data = defaultdict(dict)
         self.toc_data['section_types'] = []
+        self.toc_data['bavli'] = []
         self.comment_map = defaultdict(list)
         self.counter = 1
         self.json_dir = dest_path
@@ -358,7 +359,7 @@ class TOC(object):
             else:
                 self.handle_item(node_langs, node_short_names, node_long_names,
                                  dict(he=node['heSectionNames'],
-                                      en=node['sectionNames']), level+print_node, item)
+                                      en=node['sectionNames']), level+print_node, item, True)
         if print_node:
             self.toc_file.write('{}</node>\n'.format(' ' * 4 * level))
 
@@ -368,7 +369,7 @@ class TOC(object):
             logger.error("verify section failed orig: {} comment: {}".format(orig_list, sections[0]))
             raise ValueError("verify section failed orig: {} comment: {}".format(orig_list, sections[0]))
 
-    def handle_item(self, langs, short_titles, long_titles, sections, level, item=None):
+    def handle_item(self, langs, short_titles, long_titles, sections, level, item, complex):
         length = 0
         is_level = 0
         lang_type = 'both'
@@ -397,19 +398,16 @@ class TOC(object):
 
         correct_sections, section_index = self.get_section_type(sections['en'])
         # if hierarchy not set right
-        if correct_sections[0] in [[u'Line', u'']]:
-            for lang in langs:
-                langs[lang] = langs[lang][0]
-            correct_sections = [[u'Line'], ["שורה"]]
         if correct_sections[0][0] in level_sections:
             is_level = 2
+            self.toc_data['length'][self.counter] = {}
             for lang in langs:
                 for volume, volume_data in enumerate(langs[lang]):
                     length = max(length, volume + 1)
                     for chap, data in enumerate(volume_data):
                         json.dump(data, open("{}/{}.{}.{}.{}.json".format(self.json_dir, self.counter,
                                                                           volume, chap, lang), 'w+'))
-
+                    self.toc_data['length'][self.counter][volume] = chap + 1
         elif correct_sections[0][0] in flat_sections:
             is_level = 1
             for lang in langs:
@@ -417,11 +415,13 @@ class TOC(object):
                     length = max(length, chap + 1)
                     json.dump(data, open("{}/{}.{}.{}.json".format(self.json_dir, self.counter,
                                                                    chap, lang), 'w+'))
+            self.toc_data['length'][self.counter] = length
         elif correct_sections[0][0] in single_sections:
             is_level = 0
             for lang in langs:
                 json.dump(langs[lang], open("{}/{}.{}.json".format(self.json_dir, self.counter,
                                                                    lang), 'w+'))
+            self.toc_data['length'][self.counter] = 0
         else:
             raise KeyError('title:{} unknown section layout: {}'.format(short_titles['en'], correct_sections))
 
@@ -468,21 +468,27 @@ class TOC(object):
                                    length,
                                    lang_type,
                                    is_level))
-
+        if "Bavli" in item['categories'] and 'Page' == correct_sections[0][0]:
+            self.toc_data['bavli'].append(self.counter)
+        if "collectiveTitle" in item:
+            self.toc_data['hebrew_short_index'][self.counter] = item["heCollectiveTitle"]
+            self.toc_data['books_short_index'][self.counter] = item["collectiveTitle"]
+        else:
+            self.toc_data['hebrew_short_index'][self.counter] = short_titles['he'].encode('utf-8').replace('"', "''")
+            self.toc_data['books_short_index'][self.counter] = short_titles['en']
+        self.toc_data['books_index'][self.counter] = ', '.join(long_titles['en'])
         self.toc_data['hebrew_long_index'][self.counter] = ', '.join([x.encode('utf-8').replace('"', "''") for x in long_titles['he']])
-        self.toc_data['hebrew_short_index'][self.counter] = short_titles['he'].encode('utf-8').replace('"', "''")
-        self.toc_data['books_index'][self.counter] = [', '.join(long_titles['en']), is_level]
-        self.toc_data['books_short_index'][self.counter] = [short_titles['en'], is_level]
         self.toc_data['reverse_index'][', '.join(long_titles['en'])] = self.counter
         self.toc_data['book_section_type'][self.counter] = section_index
-        if item:
+        self.toc_data['level'][self.counter] = is_level
+        if complex and item.get("dependence"):
             if long_titles['en'][0] == u'Lev Sameach':
                 short_titles['en'] = short_titles['en'].replace("Positive Commandments", "Mitzvot Ase")
                 short_titles['en'] = short_titles['en'].replace("Negative Commandments", "Mitzvot Lo Taase")
                 long_titles['en'][-1] = short_titles['en']
 
             title = short_titles['en']
-            if long_titles['en'][0] in not_direct_commentary or item['collectiveTitle'] in not_direct_commentary:
+            if long_titles['en'][0] in not_direct_commentary or item.get("collectiveTitle") in not_direct_commentary:
                 self.counter += 1
                 return
             full_name = ', '.join(long_titles['en'])
@@ -632,7 +638,7 @@ class TOC(object):
                     title = title.replace("Mitzvot Lo Taase", "Negative Commandments")
                     self.handle_item(langs, dict(en=title, he=he_title), dict(en=[title], he=[he_title]),
                                      dict(en=schema["schema"]["sectionNames"], he=schema["schema"]["heSectionNames"]),
-                                     level)
+                                     level, item, False)
                 else:
                     c = None
                     if item.get("dependence") and is_complex:
@@ -640,7 +646,7 @@ class TOC(object):
                     # complex text
                     names = dict(he=[schema['heTitle']], en=[schema['title']])
                     self.complex.append(title)
-                    self.handle_complex(schema=schema['schema'], langs=langs, level=level, names=names, item=c)
+                    self.handle_complex(schema=schema['schema'], langs=langs, level=level, names=names, item=item)
 
     def walk_on_commentary(self, items=None):
         if items is None:
